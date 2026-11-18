@@ -79,7 +79,12 @@ export function createCommissionQuoteHandlers(options: MockApiOptions = {}) {
         );
       }
 
-      if (config.random() < config.failureRate) {
+      const scenario = request.headers.get('x-mock-scenario');
+      const shouldFail =
+        scenario === 'vendor-failure' ||
+        (scenario !== 'success' && config.random() < config.failureRate);
+
+      if (shouldFail) {
         return errorResponse(
           'VENDOR_UNAVAILABLE',
           'The commission quote service is temporarily unavailable.',
