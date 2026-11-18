@@ -6,6 +6,12 @@ A React and TypeScript demo for capturing loan details and requesting a commissi
 
 The implementation plan is in [`plan/`](plan/). Work is organized into tasks T01–T11 and follows the stage gates documented there.
 
+## CI and deployment
+
+GitHub Actions runs lint, type checking, unit tests, and a production build on branch pushes and pull requests targeting `main`. Pull requests can merge only after the required CI checks pass. Feature branches and pull requests do not deploy.
+
+After CI succeeds for a push to `main`, a separate workflow deploys the site to GitHub Pages. The public demo is available at [https://giangnguyen33.github.io/loan-commission-demo/](https://giangnguyen33.github.io/loan-commission-demo/).
+
 ## API contract
 
 The simulated endpoint is `POST /api/commission-quotes`. It accepts a loan amount, term in months, and risk band (`LOW`, `MEDIUM`, or `HIGH`) and returns a quote ID, commission rate, and total commission. The illustrative rates are 1.5%, 2.0%, and 2.5%, respectively.
