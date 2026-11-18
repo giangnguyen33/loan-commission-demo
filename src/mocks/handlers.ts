@@ -21,7 +21,7 @@ const defaultOptions: Required<MockApiOptions> = {
 
 let quoteSequence = 0;
 
-function isQuoteRequest(body: unknown): body is ApiCommissionQuoteRequest {
+const isQuoteRequest = (body: unknown): body is ApiCommissionQuoteRequest => {
   if (typeof body !== 'object' || body === null || Array.isArray(body)) {
     return false;
   }
@@ -38,14 +38,14 @@ function isQuoteRequest(body: unknown): body is ApiCommissionQuoteRequest {
     typeof request.riskBand === 'string' &&
     (RISK_BANDS as readonly string[]).includes(request.riskBand)
   );
-}
+};
 
-function errorResponse(error: string, message: string, status: number) {
+const errorResponse = (error: string, message: string, status: number) => {
   const body: ApiCommissionQuoteError = { error, message };
   return HttpResponse.json(body, { status });
-}
+};
 
-export function createCommissionQuoteHandlers(options: MockApiOptions = {}) {
+export const createCommissionQuoteHandlers = (options: MockApiOptions = {}) => {
   const config = { ...defaultOptions, ...options };
   const endpointPattern = new RegExp(
     `${API_URL.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`,
@@ -104,6 +104,6 @@ export function createCommissionQuoteHandlers(options: MockApiOptions = {}) {
       return HttpResponse.json(quote);
     }),
   ];
-}
+};
 
 export const handlers = createCommissionQuoteHandlers();

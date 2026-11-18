@@ -15,11 +15,11 @@ const validRequest: ApiCommissionQuoteRequest = {
 
 const endpoint = `http://localhost${API_URL}`;
 
-async function postQuote(
+const postQuote = async (
   body: unknown = validRequest,
   apiKey: string | null = API_KEY,
   scenario?: 'success' | 'vendor-failure',
-) {
+ ) => {
   const headers = new Headers({ 'content-type': 'application/json' });
   if (apiKey !== null) {
     headers.set('api-key', apiKey);
@@ -33,7 +33,7 @@ async function postQuote(
     headers,
     body: JSON.stringify(body),
   });
-}
+};
 
 describe('commission quote MSW handler', () => {
   beforeAll(() => server.listen({ onUnhandledFrame: 'error' }));
