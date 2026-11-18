@@ -113,7 +113,9 @@ describe('LoanQuoteForm', () => {
         riskBand: 'MEDIUM',
       } satisfies CommissionQuoteRequest),
     );
-    expect(await screen.findByRole('status')).toHaveTextContent('CQ-123456');
+    expect(
+      await screen.findByRole('region', { name: 'Quote result' }),
+    ).toHaveTextContent('CQ-123456');
     expect(onQuoteGenerated).toHaveBeenCalledWith(quote);
   });
 
@@ -125,7 +127,9 @@ describe('LoanQuoteForm', () => {
     await fillValidForm(user);
     const submitButton = screen.getByRole('button', { name: 'Generate quote' });
     await user.click(submitButton);
-    expect(await screen.findByText('Quote CQ-123456 generated.')).toBeVisible();
+    expect(
+      await screen.findByRole('region', { name: 'Quote result' }),
+    ).toBeVisible();
 
     await user.click(submitButton);
 
@@ -139,7 +143,9 @@ describe('LoanQuoteForm', () => {
 
     await fillValidForm(user);
     await user.click(screen.getByRole('button', { name: 'Generate quote' }));
-    expect(await screen.findByText('Quote CQ-123456 generated.')).toBeVisible();
+    expect(
+      await screen.findByRole('region', { name: 'Quote result' }),
+    ).toBeVisible();
 
     const amountInput = screen.getByLabelText('Loan amount (AUD)');
     await user.clear(amountInput);
@@ -184,7 +190,9 @@ describe('LoanQuoteForm', () => {
     expect(mockRequestCommissionQuote).toHaveBeenCalledOnce();
 
     resolveRequest(quote);
-    expect(await screen.findByText('Quote CQ-123456 generated.')).toBeVisible();
+    expect(
+      await screen.findByRole('region', { name: 'Quote result' }),
+    ).toBeVisible();
   });
 
   it('shows API errors and permits retry', async () => {
@@ -199,7 +207,9 @@ describe('LoanQuoteForm', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent('Vendor unavailable');
 
     await user.click(screen.getByRole('button', { name: 'Generate quote' }));
-    expect(await screen.findByRole('status')).toHaveTextContent('CQ-123456');
+    expect(
+      await screen.findByRole('region', { name: 'Quote result' }),
+    ).toHaveTextContent('CQ-123456');
     expect(mockRequestCommissionQuote).toHaveBeenCalledTimes(2);
   });
 });
