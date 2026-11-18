@@ -18,10 +18,14 @@ const endpoint = `http://localhost${API_URL}`;
 async function postQuote(
   body: unknown = validRequest,
   apiKey: string | null = API_KEY,
+  scenario?: 'success' | 'vendor-failure',
 ) {
   const headers = new Headers({ 'content-type': 'application/json' });
   if (apiKey !== null) {
     headers.set('api-key', apiKey);
+  }
+  if (scenario) {
+    headers.set('x-mock-scenario', scenario);
   }
 
   return fetch(endpoint, {
@@ -116,6 +120,24 @@ describe('commission quote MSW handler', () => {
       error: 'VENDOR_UNAVAILABLE',
       message: expect.any(String),
     });
+  });
+
+  it('forces success for the deterministic success scenario', async () => {
+    server.use(
+      ...createCommissionQuoteHandlers({ failureRate: 1, responseDelayMs: 0 }),
+    );
+    const response = await postQuote(validRequest, API_KEY, 'success');
+
+    expect(response.status).toBe(200);
+  });
+
+  it('forces a vendor failure for the deterministic failure scenario', async () => {
+    server.use(
+      ...createCommissionQuoteHandlers({ failureRate: 0, responseDelayMs: 0 }),
+    );
+    const response = await postQuote(validRequest, API_KEY, 'vendor-failure');
+
+    expect(response.status).toBe(503);
   });
 
   it('returns 400 for malformed JSON', async () => {
