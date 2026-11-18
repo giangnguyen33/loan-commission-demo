@@ -1,4 +1,5 @@
 import './App.css';
+import { LoanQuoteForm } from './components/LoanQuoteForm';
 
 export default function App() {
   return (
@@ -12,7 +13,7 @@ export default function App() {
       </header>
       <section className="workspace" aria-labelledby="workspace-title">
         <h2 id="workspace-title">New quote</h2>
-        <p>Loan details will be collected here.</p>
+        <LoanQuoteForm />
       </section>
     </main>
   );
