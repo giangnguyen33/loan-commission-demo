@@ -1,0 +1,99 @@
+.loan-quote-form {
+  max-width: 42rem;
+  margin-top: 1.5rem;
+}
+
+.loan-form-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 1rem;
+}
+
+.loan-form-field {
+  display: grid;
+  align-content: start;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.loan-form-field label {
+  color: #263d33;
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.loan-form-field input,
+.loan-form-field select {
+  width: 100%;
+  min-height: 2.85rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #9aaca2;
+  border-radius: 4px;
+  background: #fff;
+  color: #20342c;
+  font: inherit;
+}
+
+.loan-form-field input:focus,
+.loan-form-field select:focus {
+  border-color: #28664d;
+  outline: 3px solid rgb(40 102 77 / 18%);
+}
+
+.loan-form-field [aria-invalid='true'] {
+  border-color: #a23832;
+}
+
+.field-error,
+.submission-error {
+  margin: 0;
+  color: #a23832;
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.loan-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.loan-form-actions button {
+  min-height: 2.9rem;
+  padding: 0.7rem 1rem;
+  border: 0;
+  border-radius: 4px;
+  background: #235d46;
+  color: #fff;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.loan-form-actions button:hover:not(:disabled) {
+  background: #194733;
+}
+
+.loan-form-actions button:focus-visible {
+  outline: 3px solid #97c4ac;
+  outline-offset: 2px;
+}
+
+.loan-form-actions button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.submission-success {
+  margin: 0;
+  color: #235d46;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 36rem) {
+  .loan-form-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
