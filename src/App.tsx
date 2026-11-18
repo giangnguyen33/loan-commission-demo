@@ -1,7 +1,7 @@
 import './App.css';
 import { LoanQuoteForm } from './components/LoanQuoteForm';
 
-export default function App() {
+const App = () => {
   return (
     <main className="app-shell">
       <header className="app-header">
@@ -17,4 +17,6 @@ export default function App() {
       </section>
     </main>
   );
-}
+};
+
+export default App;

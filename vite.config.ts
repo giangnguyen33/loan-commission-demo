@@ -3,6 +3,9 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   base: process.env.GITHUB_ACTIONS ? '/loan-commission-demo/' : '/',
+  build: {
+    target: 'es2022',
+  },
   plugins: [react()],
   test: {
     include: ['src/**/*.test.{ts,tsx}'],
