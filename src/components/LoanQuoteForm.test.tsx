@@ -180,6 +180,10 @@ describe('LoanQuoteForm', () => {
     expect(
       screen.getByRole('button', { name: 'Generating quote…' }),
     ).toBeEnabled();
+    expect(screen.getByRole('button').closest('form')).toHaveAttribute(
+      'aria-busy',
+      'true',
+    );
     expect(screen.getByRole('status')).toHaveTextContent(
       'Generating quote. Please wait.',
     );
@@ -211,5 +215,43 @@ describe('LoanQuoteForm', () => {
       await screen.findByRole('region', { name: 'Quote result' }),
     ).toHaveTextContent('CQ-123456');
     expect(mockRequestCommissionQuote).toHaveBeenCalledTimes(2);
+  });
+
+  it.each([
+    ['missing API key', 'API key is required.'],
+    ['invalid API key', 'API key is invalid.'],
+    [
+      'vendor unavailable',
+      'The commission quote service is temporarily unavailable.',
+    ],
+    [
+      'network failure',
+      'Unable to connect to the commission quote service.',
+    ],
+  ])('shows the %s message to the user', async (_caseName, message) => {
+    const user = userEvent.setup();
+    mockRequestCommissionQuote.mockRejectedValue(new Error(message));
+    render(<LoanQuoteForm />);
+
+    await fillValidForm(user);
+    await user.click(screen.getByRole('button', { name: 'Generate quote' }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(message);
+  });
+
+  it('clears a stale request error when the user edits the loan details', async () => {
+    const user = userEvent.setup();
+    mockRequestCommissionQuote.mockRejectedValueOnce(
+      new Error('The commission quote service is temporarily unavailable.'),
+    );
+    render(<LoanQuoteForm />);
+
+    await fillValidForm(user);
+    await user.click(screen.getByRole('button', { name: 'Generate quote' }));
+    expect(await screen.findByRole('alert')).toBeVisible();
+
+    await user.type(screen.getByLabelText('Loan amount (AUD)'), '0');
+
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
   });
 });

@@ -5,6 +5,7 @@ import type {
   RiskBand,
 } from '../types/commissionQuote';
 import { useCommissionQuote } from '../hooks/useCommissionQuote';
+import { LoadingState } from './LoadingState';
 import { NumberField } from './NumberField';
 import { QuoteResult } from './QuoteResult';
 import './LoanQuoteForm.css';
@@ -134,9 +135,7 @@ export const LoanQuoteForm = ({ onQuoteGenerated }: LoanQuoteFormProps) => {
           {isSubmitting ? 'Generating quote…' : 'Generate quote'}
         </button>
         {isSubmitting && (
-          <p role="status" aria-live="polite">
-            Generating quote. Please wait.
-          </p>
+          <LoadingState message="Generating quote. Please wait." />
         )}
         {submissionError && (
           <p className="submission-error" role="alert">
