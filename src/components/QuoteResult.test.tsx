@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import type { CommissionQuoteResponse } from '../types/commissionQuote';
+import type { CommissionQuote } from '../models/commissionQuote';
 import { QuoteResult } from './QuoteResult';
 
-const quote: CommissionQuoteResponse = {
-  quoteId: 'CQ-123456',
-  commissionRate: 0.015,
-  totalCommission: 7500,
+const quote: CommissionQuote = {
+  id: 'CQ-123456',
+  rate: 0.015,
+  total: 7500,
 };
 
 describe('QuoteResult', () => {
@@ -20,7 +20,7 @@ describe('QuoteResult', () => {
   });
 
   it('formats a commission below one dollar as AUD currency', () => {
-    render(<QuoteResult quote={{ ...quote, totalCommission: 0.25 }} />);
+    render(<QuoteResult quote={{ ...quote, total: 0.25 }} />);
 
     expect(screen.getByText('$0.25')).toBeVisible();
   });

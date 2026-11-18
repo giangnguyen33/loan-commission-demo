@@ -2,9 +2,10 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type {
-  CommissionQuoteRequest,
-  CommissionQuoteResponse,
+  ApiCommissionQuoteRequest,
+  ApiCommissionQuoteResponse,
 } from '../types/commissionQuote';
+import type { CommissionQuote } from '../models/commissionQuote';
 import { LoanQuoteForm } from './LoanQuoteForm';
 
 vi.mock('../api/commissionQuoteApi', () => ({
@@ -15,7 +16,13 @@ import { requestCommissionQuote } from '../api/commissionQuoteApi';
 
 const mockRequestCommissionQuote = vi.mocked(requestCommissionQuote);
 
-const quote: CommissionQuoteResponse = {
+const quote: CommissionQuote = {
+  id: 'CQ-123456',
+  rate: 0.015,
+  total: 7500,
+};
+
+const apiQuote: ApiCommissionQuoteResponse = {
   quoteId: 'CQ-123456',
   commissionRate: 0.015,
   totalCommission: 7500,
@@ -99,7 +106,7 @@ describe('LoanQuoteForm', () => {
   it('submits the typed request and reports the generated quote', async () => {
     const user = userEvent.setup();
     const onQuoteGenerated = vi.fn();
-    mockRequestCommissionQuote.mockResolvedValue(quote);
+    mockRequestCommissionQuote.mockResolvedValue(apiQuote);
     render(<LoanQuoteForm onQuoteGenerated={onQuoteGenerated} />);
 
     await fillValidForm(user);
@@ -111,7 +118,7 @@ describe('LoanQuoteForm', () => {
         loanAmount: 500000,
         loanTermInMonths: 360,
         riskBand: 'MEDIUM',
-      } satisfies CommissionQuoteRequest),
+      } satisfies ApiCommissionQuoteRequest),
     );
     expect(
       await screen.findByRole('region', { name: 'Quote result' }),
@@ -121,7 +128,7 @@ describe('LoanQuoteForm', () => {
 
   it('does not resubmit identical details after a successful quote', async () => {
     const user = userEvent.setup();
-    mockRequestCommissionQuote.mockResolvedValue(quote);
+    mockRequestCommissionQuote.mockResolvedValue(apiQuote);
     render(<LoanQuoteForm />);
 
     await fillValidForm(user);
@@ -138,7 +145,7 @@ describe('LoanQuoteForm', () => {
 
   it('allows another quote after the loan details change', async () => {
     const user = userEvent.setup();
-    mockRequestCommissionQuote.mockResolvedValue(quote);
+    mockRequestCommissionQuote.mockResolvedValue(apiQuote);
     render(<LoanQuoteForm />);
 
     await fillValidForm(user);
@@ -164,7 +171,7 @@ describe('LoanQuoteForm', () => {
 
   it('keeps the button accessible and ignores rapid repeated clicks', async () => {
     const user = userEvent.setup();
-    let resolveRequest: (value: CommissionQuoteResponse) => void = () => {};
+    let resolveRequest: (value: ApiCommissionQuoteResponse) => void = () => {};
     mockRequestCommissionQuote.mockImplementation(
       () =>
         new Promise((resolve) => {
@@ -193,7 +200,7 @@ describe('LoanQuoteForm', () => {
     await user.click(submitButton);
     expect(mockRequestCommissionQuote).toHaveBeenCalledOnce();
 
-    resolveRequest(quote);
+    resolveRequest(apiQuote);
     expect(
       await screen.findByRole('region', { name: 'Quote result' }),
     ).toBeVisible();
@@ -203,7 +210,7 @@ describe('LoanQuoteForm', () => {
     const user = userEvent.setup();
     mockRequestCommissionQuote
       .mockRejectedValueOnce(new Error('Vendor unavailable'))
-      .mockResolvedValueOnce(quote);
+      .mockResolvedValueOnce(apiQuote);
     render(<LoanQuoteForm />);
 
     await fillValidForm(user);

@@ -1,9 +1,10 @@
 import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type {
-  CommissionQuoteRequest,
-  CommissionQuoteResponse,
+  ApiCommissionQuoteRequest,
+  ApiCommissionQuoteResponse,
 } from '../types/commissionQuote';
+import type { CommissionQuote, LoanDetails } from '../models/commissionQuote';
 import { useCommissionQuote } from './useCommissionQuote';
 
 vi.mock('../api/commissionQuoteApi', () => ({
@@ -14,16 +15,22 @@ import { requestCommissionQuote } from '../api/commissionQuoteApi';
 
 const mockRequestCommissionQuote = vi.mocked(requestCommissionQuote);
 
-const request: CommissionQuoteRequest = {
-  loanAmount: 500000,
-  loanTermInMonths: 360,
+const request: LoanDetails = {
+  amount: 500000,
+  termMonths: 360,
   riskBand: 'LOW',
 };
 
-const quote: CommissionQuoteResponse = {
+const apiQuote: ApiCommissionQuoteResponse = {
   quoteId: 'CQ-123456',
   commissionRate: 0.015,
   totalCommission: 7500,
+};
+
+const quote: CommissionQuote = {
+  id: apiQuote.quoteId,
+  rate: apiQuote.commissionRate,
+  total: apiQuote.totalCommission,
 };
 
 describe('useCommissionQuote', () => {
@@ -32,7 +39,7 @@ describe('useCommissionQuote', () => {
   });
 
   it('stores the returned quote and invokes the success callback', async () => {
-    mockRequestCommissionQuote.mockResolvedValue(quote);
+    mockRequestCommissionQuote.mockResolvedValue(apiQuote);
     const onQuoteGenerated = vi.fn();
     const { result } = renderHook(() => useCommissionQuote({ onQuoteGenerated }));
 
@@ -40,7 +47,11 @@ describe('useCommissionQuote', () => {
       await result.current.submitQuote(request);
     });
 
-    expect(mockRequestCommissionQuote).toHaveBeenCalledWith(request);
+    expect(mockRequestCommissionQuote).toHaveBeenCalledWith({
+      loanAmount: request.amount,
+      loanTermInMonths: request.termMonths,
+      riskBand: request.riskBand,
+    } satisfies ApiCommissionQuoteRequest);
     expect(result.current.quote).toEqual(quote);
     expect(result.current.error).toBeNull();
     expect(result.current.isSubmitting).toBe(false);
@@ -61,7 +72,7 @@ describe('useCommissionQuote', () => {
   });
 
   it('ignores a duplicate submission while the first request is pending', async () => {
-    let resolveRequest: (value: CommissionQuoteResponse) => void = () => {};
+    let resolveRequest: (value: ApiCommissionQuoteResponse) => void = () => {};
     mockRequestCommissionQuote.mockImplementation(
       () =>
         new Promise((resolve) => {
@@ -82,7 +93,7 @@ describe('useCommissionQuote', () => {
     expect(mockRequestCommissionQuote).toHaveBeenCalledOnce();
 
     await act(async () => {
-      resolveRequest(quote);
+      resolveRequest(apiQuote);
       await firstSubmission;
     });
 

@@ -1,8 +1,8 @@
 import { API_KEY, API_URL } from '../apiConfig';
 import type {
-  CommissionQuoteApiError as CommissionQuoteApiErrorBody,
-  CommissionQuoteRequest,
-  CommissionQuoteResponse,
+  ApiCommissionQuoteError,
+  ApiCommissionQuoteRequest,
+  ApiCommissionQuoteResponse,
 } from '../types/commissionQuote';
 
 export class CommissionQuoteClientError extends Error {
@@ -17,7 +17,7 @@ export class CommissionQuoteClientError extends Error {
   }
 }
 
-const isApiError = (value: unknown): value is CommissionQuoteApiErrorBody => {
+const isApiError = (value: unknown): value is ApiCommissionQuoteError => {
   if (typeof value !== 'object' || value === null) {
     return false;
   }
@@ -27,8 +27,8 @@ const isApiError = (value: unknown): value is CommissionQuoteApiErrorBody => {
 };
 
 export const requestCommissionQuote = async (
-  request: CommissionQuoteRequest,
-): Promise<CommissionQuoteResponse> => {
+  request: ApiCommissionQuoteRequest,
+): Promise<ApiCommissionQuoteResponse> => {
   let response: Response;
 
   try {
@@ -65,5 +65,5 @@ export const requestCommissionQuote = async (
     );
   }
 
-  return (await response.json()) as CommissionQuoteResponse;
+  return (await response.json()) as ApiCommissionQuoteResponse;
 };
