@@ -15,7 +15,7 @@ api-key: demo-vendor-key
 
 The API key is a demo value only. MSW runs in the browser, so this check does not provide production-grade security. Never place real vendor credentials in frontend code.
 
-API settings are separated into `src/apiConfig.local.ts` and `src/apiConfig.production.ts`, with `src/apiConfig.ts` selecting the active settings. Vite selects the production config for production builds. Both currently use the same simulated endpoint and demo key because the project has no real backend.
+API settings are separated into `src/apiConfig.local.ts` and `src/apiConfig.production.ts`, with `src/apiConfig.ts` selecting the active settings. Set `useMockServer` to `true` to start MSW or `false` to send requests directly to `apiUrl`. Both configs default to mock mode and currently use the same simulated endpoint and demo key because the project has no real backend. Do not put real vendor secrets in browser config; a real API requiring credentials needs a trusted backend.
 
 ## Request
 

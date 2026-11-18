@@ -1,0 +1,7 @@
+const localConfig = {
+  useMockServer: true,
+  apiUrl: '/api/commission-quotes',
+  apiKey: 'demo-vendor-key',
+} as const;
+
+export default localConfig;
