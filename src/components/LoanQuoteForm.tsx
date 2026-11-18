@@ -6,6 +6,7 @@ import type {
 } from '../types/commissionQuote';
 import { useCommissionQuote } from '../hooks/useCommissionQuote';
 import { NumberField } from './NumberField';
+import { QuoteResult } from './QuoteResult';
 import './LoanQuoteForm.css';
 
 type FieldErrors = Partial<
@@ -142,11 +143,7 @@ export const LoanQuoteForm = ({ onQuoteGenerated }: LoanQuoteFormProps) => {
             {submissionError}
           </p>
         )}
-        {quote && (
-          <p className="submission-success" role="status">
-            Quote {quote.quoteId} generated.
-          </p>
-        )}
+        {quote && <QuoteResult quote={quote} />}
       </div>
     </form>
   );
