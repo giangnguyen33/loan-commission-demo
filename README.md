@@ -14,7 +14,7 @@ After CI succeeds for a push to `main`, a separate workflow deploys the site to 
 
 ## API contract
 
-The simulated endpoint is `POST /api/commission-quotes`. It accepts a loan amount, term in months, and risk band (`LOW`, `MEDIUM`, or `HIGH`) and returns a quote ID, commission rate, and total commission. The illustrative rates are 1.5%, 2.0%, and 2.5%, respectively.
+The simulated endpoint is `POST /api/commission-quotes`. It accepts a loan amount, term in months, and risk band (`LOW`, `MEDIUM`, or `HIGH`) and returns a quote ID, commission rate, and total commission. The illustrative rates are 1.5%, 2.0%, and 2.5%, respectively. See the [full API contract](docs/commission-quote-api.md) for request, response, and error examples.
 
 ## Security note
 

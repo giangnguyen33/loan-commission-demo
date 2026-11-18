@@ -1,0 +1,141 @@
+openapi: 3.1.0
+info:
+  title: Loan Commission Quote API
+  version: 1.0.0
+  description: >-
+    Contract for the simulated loan commission quote API. The browser-side MSW
+    API-key check is a demo only and is not production-grade security. Never
+    place real vendor credentials in frontend code.
+servers:
+  - url: /
+    description: Current application origin
+paths:
+  /api/commission-quotes:
+    post:
+      operationId: createCommissionQuote
+      summary: Create a commission quote
+      security:
+        - apiKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommissionQuoteRequest'
+            example:
+              loanAmount: 500000
+              loanTermInMonths: 360
+              riskBand: LOW
+      responses:
+        '200':
+          description: Commission quote generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommissionQuoteResponse'
+              example:
+                quoteId: CQ-123456
+                commissionRate: 0.015
+                totalCommission: 7500
+        '400':
+          description: Request payload is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              example:
+                error: INVALID_REQUEST
+                message: Loan amount must be positive.
+        '401':
+          description: API key is missing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: API key is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '503':
+          description: Simulated vendor service failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: api-key
+      description: Demo-only key; do not use real credentials in a browser client.
+  schemas:
+    CommissionQuoteRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - loanAmount
+        - loanTermInMonths
+        - riskBand
+      properties:
+        loanAmount:
+          type: number
+          exclusiveMinimum: 0
+          description: Loan principal amount; must be positive.
+          example: 500000
+        loanTermInMonths:
+          type: integer
+          minimum: 1
+          description: Loan term in months; must be a positive integer.
+          example: 360
+        riskBand:
+          $ref: '#/components/schemas/RiskBand'
+    CommissionQuoteResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - quoteId
+        - commissionRate
+        - totalCommission
+      properties:
+        quoteId:
+          type: string
+          example: CQ-123456
+        commissionRate:
+          type: number
+          enum:
+            - 0.015
+            - 0.02
+            - 0.025
+          description: >-
+            Illustrative commission rate: LOW 1.5%, MEDIUM 2.0%, HIGH 2.5%.
+          example: 0.015
+        totalCommission:
+          type: number
+          minimum: 0
+          multipleOf: 0.01
+          description: Commission amount rounded to two decimal places.
+          example: 7500
+    RiskBand:
+      type: string
+      enum:
+        - LOW
+        - MEDIUM
+        - HIGH
+    ApiError:
+      type: object
+      additionalProperties: false
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Machine-readable error code.
+          example: INVALID_REQUEST
+        message:
+          type: string
+          description: Human-readable error description.
+          example: Loan amount must be positive.
