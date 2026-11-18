@@ -1,13 +1,13 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { API_KEY, API_URL } from '../apiConfig';
 import type {
-  CommissionQuoteRequest,
-  CommissionQuoteResponse,
+  ApiCommissionQuoteRequest,
+  ApiCommissionQuoteResponse,
 } from '../types/commissionQuote';
 import { createCommissionQuoteHandlers } from './handlers';
 import { server } from './server';
 
-const validRequest: CommissionQuoteRequest = {
+const validRequest: ApiCommissionQuoteRequest = {
   loanAmount: 500000,
   loanTermInMonths: 360,
   riskBand: 'LOW',
@@ -91,7 +91,7 @@ describe('commission quote MSW handler', () => {
         ...createCommissionQuoteHandlers({ failureRate: 0, responseDelayMs: 0 }),
       );
       const response = await postQuote({ ...validRequest, riskBand });
-      const quote = (await response.json()) as CommissionQuoteResponse;
+      const quote = (await response.json()) as ApiCommissionQuoteResponse;
 
       expect(response.status).toBe(200);
       expect(quote).toMatchObject({ commissionRate, totalCommission });
@@ -103,8 +103,8 @@ describe('commission quote MSW handler', () => {
     server.use(
       ...createCommissionQuoteHandlers({ failureRate: 0, responseDelayMs: 0 }),
     );
-    const first = (await (await postQuote()).json()) as CommissionQuoteResponse;
-    const second = (await (await postQuote()).json()) as CommissionQuoteResponse;
+    const first = (await (await postQuote()).json()) as ApiCommissionQuoteResponse;
+    const second = (await (await postQuote()).json()) as ApiCommissionQuoteResponse;
 
     expect(first.quoteId).not.toBe(second.quoteId);
   });

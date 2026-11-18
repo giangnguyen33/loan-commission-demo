@@ -1,11 +1,10 @@
 import { delay, http, HttpResponse } from 'msw';
 import { API_KEY, API_URL } from '../apiConfig';
+import { COMMISSION_RATES, RISK_BANDS } from '../models/commissionQuote';
 import {
-  COMMISSION_RATES,
-  RISK_BANDS,
-  type CommissionQuoteApiError,
-  type CommissionQuoteRequest,
-  type CommissionQuoteResponse,
+  type ApiCommissionQuoteError,
+  type ApiCommissionQuoteRequest,
+  type ApiCommissionQuoteResponse,
 } from '../types/commissionQuote';
 
 export interface MockApiOptions {
@@ -22,7 +21,7 @@ const defaultOptions: Required<MockApiOptions> = {
 
 let quoteSequence = 0;
 
-function isQuoteRequest(body: unknown): body is CommissionQuoteRequest {
+function isQuoteRequest(body: unknown): body is ApiCommissionQuoteRequest {
   if (typeof body !== 'object' || body === null || Array.isArray(body)) {
     return false;
   }
@@ -42,7 +41,7 @@ function isQuoteRequest(body: unknown): body is CommissionQuoteRequest {
 }
 
 function errorResponse(error: string, message: string, status: number) {
-  const body: CommissionQuoteApiError = { error, message };
+  const body: ApiCommissionQuoteError = { error, message };
   return HttpResponse.json(body, { status });
 }
 
@@ -96,7 +95,7 @@ export function createCommissionQuoteHandlers(options: MockApiOptions = {}) {
       const totalCommission =
         Math.round((body.loanAmount * commissionRate + Number.EPSILON) * 100) /
         100;
-      const quote: CommissionQuoteResponse = {
+      const quote: ApiCommissionQuoteResponse = {
         quoteId: `CQ-${Date.now()}-${++quoteSequence}`,
         commissionRate,
         totalCommission,

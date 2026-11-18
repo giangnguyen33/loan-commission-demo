@@ -1,9 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import type {
-  CommissionQuoteRequest,
-  CommissionQuoteResponse,
-  RiskBand,
-} from '../types/commissionQuote';
+import type { CommissionQuote, LoanDetails, RiskBand } from '../models/commissionQuote';
 import { useCommissionQuote } from '../hooks/useCommissionQuote';
 import { LoadingState } from './LoadingState';
 import { NumberField } from './NumberField';
@@ -15,7 +11,7 @@ type FieldErrors = Partial<
 >;
 
 interface LoanQuoteFormProps {
-  onQuoteGenerated?: (quote: CommissionQuoteResponse) => void;
+  onQuoteGenerated?: (quote: CommissionQuote) => void;
 }
 
 const riskBands: RiskBand[] = ['LOW', 'MEDIUM', 'HIGH'];
@@ -62,12 +58,12 @@ export const LoanQuoteForm = ({ onQuoteGenerated }: LoanQuoteFormProps) => {
       return;
     }
 
-    const request: CommissionQuoteRequest = {
-      loanAmount: amount,
-      loanTermInMonths: term,
+    const details: LoanDetails = {
+      amount,
+      termMonths: term,
       riskBand,
     };
-    await submitQuote(request);
+    await submitQuote(details);
   };
 
   return (

@@ -59,3 +59,7 @@ The illustrative commission rates are:
 ```
 
 The `error` field is a machine-readable code; `message` is a human-readable description. Expected status codes for authentication and request validation are documented with the mock API task.
+
+## Frontend models
+
+Frontend components and hooks use the app-owned models in `src/models/commissionQuote.ts` (`LoanDetails` and `CommissionQuote`). They do not import OpenAPI-generated types. The API client maps those models to and from the generated contract types in `src/api/commissionQuoteMapper.ts`, keeping schema changes at the API boundary.

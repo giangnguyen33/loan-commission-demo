@@ -1,20 +1,11 @@
 import type { components } from './generated';
 
-export const RISK_BANDS = ['LOW', 'MEDIUM', 'HIGH'] as const;
-export type RiskBand = components['schemas']['RiskBand'];
+export type ApiRiskBand = components['schemas']['RiskBand'];
 
-export const COMMISSION_RATES = {
-  LOW: 0.015,
-  MEDIUM: 0.02,
-  HIGH: 0.025,
-} as const satisfies Readonly<
-  Record<RiskBand, CommissionQuoteResponse['commissionRate']>
->;
-
-export type CommissionQuoteRequest =
+export type ApiCommissionQuoteRequest =
   components['schemas']['CommissionQuoteRequest'];
 
-export type CommissionQuoteResponse =
+export type ApiCommissionQuoteResponse =
   components['schemas']['CommissionQuoteResponse'];
 
-export type CommissionQuoteApiError = components['schemas']['ApiError'];
+export type ApiCommissionQuoteError = components['schemas']['ApiError'];

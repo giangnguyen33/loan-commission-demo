@@ -1,22 +1,22 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { API_KEY, API_URL } from '../apiConfig';
 import type {
-  CommissionQuoteApiError,
-  CommissionQuoteRequest,
-  CommissionQuoteResponse,
+  ApiCommissionQuoteError,
+  ApiCommissionQuoteRequest,
+  ApiCommissionQuoteResponse,
 } from '../types/commissionQuote';
 import {
   CommissionQuoteClientError,
   requestCommissionQuote,
 } from './commissionQuoteApi';
 
-const request: CommissionQuoteRequest = {
+const request: ApiCommissionQuoteRequest = {
   loanAmount: 500000,
   loanTermInMonths: 360,
   riskBand: 'LOW',
 };
 
-const quote: CommissionQuoteResponse = {
+const quote: ApiCommissionQuoteResponse = {
   quoteId: 'CQ-123456',
   commissionRate: 0.015,
   totalCommission: 7500,
@@ -48,7 +48,11 @@ describe('requestCommissionQuote', () => {
       'application/json',
     );
     expect(new Headers(options.headers).get('api-key')).toBe(API_KEY);
-    expect(JSON.parse(String(options.body))).toEqual(request);
+    expect(JSON.parse(String(options.body))).toEqual({
+      loanAmount: 500000,
+      loanTermInMonths: 360,
+      riskBand: 'LOW',
+    });
   });
 
   it('returns the typed successful response', async () => {
@@ -63,7 +67,7 @@ describe('requestCommissionQuote', () => {
     [403, 'INVALID_API_KEY'],
     [503, 'VENDOR_UNAVAILABLE'],
   ])('converts HTTP %s to a client error', async (status, errorCode) => {
-    const errorBody: CommissionQuoteApiError = {
+    const errorBody: ApiCommissionQuoteError = {
       error: errorCode,
       message: `Failure ${status}`,
     };
