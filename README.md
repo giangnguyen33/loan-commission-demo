@@ -10,7 +10,7 @@ The implementation plan is in [`plan/`](plan/). Work is organized into tasks T01
 
 GitHub Actions runs lint, type checking, unit tests, and a production build on branch pushes and pull requests targeting `main`. Pull requests can merge only after the required CI checks pass. Feature branches and pull requests do not deploy.
 
-After CI succeeds for a push to `main`, a separate workflow deploys the site to GitHub Pages. The public demo is available at [https://giangnguyen33.github.io/loan-commission-demo/](https://giangnguyen33.github.io/loan-commission-demo/).
+After CI succeeds for a push to `main`, a separate workflow deploys the site to GitHub Pages.\
 
 ## API contract
 
