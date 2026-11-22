@@ -1,6 +1,6 @@
 # Loan Commission Quote Demo Tasks
 
-This folder breaks the requirements in `../AGENTS.md` into ordered, independently trackable task briefs. Work in order; do not begin T04 until the initial CI/CD workflow and deployment have been verified.
+This folder breaks the original requirements in `../AGENTS.md` into ordered, independently trackable T01–T11 briefs. The BFF refactor is planned separately in [`../plan.md`](../plan.md) and [`refactor/`](refactor/).
 
 ## Stages
 
@@ -27,3 +27,7 @@ T10 adds deterministic Playwright journeys to CI. Deployment must run only after
 - Keep API contracts separate from UI components and MSW handlers separate from application logic.
 - Never expose real vendor API keys. The browser-side MSW key check is a demo simulation, not production security.
 - Overall estimate from the source plan: 3 hours 30 minutes.
+
+## Refactor
+
+The architecture plan is [`../plan.md`](../plan.md). Its detailed, dependency-ordered tasks are indexed in [`refactor/README.md`](refactor/README.md). Do not begin implementation until its deployment decision gate and task breakdown are reviewed.
